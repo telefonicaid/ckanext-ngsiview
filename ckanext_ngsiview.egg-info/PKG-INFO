@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: ckanext-ngsiview
+Version: 0.0.1
+Summary: UNKNOWN
+Home-page: https://github.com//ckanext-ngsiview
+Author: UNKNOWN
+Author-email: UNKNOWN
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Programming Language :: Python :: 2.7
