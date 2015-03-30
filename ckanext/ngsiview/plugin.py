@@ -10,7 +10,7 @@ from ckan.common import _, request
 log = logging.getLogger(__name__)
 
 
-class TextView(p.SingletonPlugin):
+class NgsiView(p.SingletonPlugin):
 
     NGSI_FORMATS = ['ngsi9', 'ngsi10']
 

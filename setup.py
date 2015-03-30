@@ -17,6 +17,6 @@ setup(
     data_files=[],
     entry_points='''
         [ckan.plugins]
-        ngsiview=ckanext.ngsiview.plugin:NgsiviewPlugin
+        ngsiview=ckanext.ngsiview.plugin:NgsiView
     ''',
 )
