@@ -1,0 +1,12 @@
+#IntelJ Idea
+.idea/
+
+#virtualenv
+.venv/
+
+#Python
+*.pyc
+
+#CKAN
+ckanext_ngsipreview.egg-info/
+dist/
