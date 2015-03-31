@@ -2,6 +2,7 @@ import logging
 
 from ckan.common import json
 import ckan.plugins as p
+import ckan.lib.helpers as h
 import ckanext.resourceproxy.plugin as proxy
 from ckan.plugins import toolkit
 import ckan.lib.datapreview as datapreview
@@ -14,6 +15,7 @@ class NgsiView(p.SingletonPlugin):
 
     NGSI_FORMATS = ['ngsi9', 'ngsi10']
 
+    p.implements(p.IRoutes, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourceView, inherit=True)
@@ -24,7 +26,7 @@ class NgsiView(p.SingletonPlugin):
 
     def update_config(self, config):
 
-        p.implements(p.IRoutes, inherit=True)
+
         p.toolkit.add_public_directory(config, 'theme/public')
         p.toolkit.add_template_directory(config, 'theme/templates')
         p.toolkit.add_resource('theme/public', 'ckanext-textview')
