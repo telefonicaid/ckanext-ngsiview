@@ -8,5 +8,5 @@
 *.pyc
 
 #CKAN
-ckanext_ngsipreview.egg-info/
+ckanext_ngsiview.egg-info/
 dist/
