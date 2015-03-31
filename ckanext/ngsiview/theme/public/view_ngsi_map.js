@@ -1,4 +1,4 @@
-ckan.module('ngsipreviewmap',function(jQuery,_){
+ckan.module('ngsiviewmap',function(jQuery,_){
     return{
 	options:{
 		i18n:{error:_('An error occurred: %(text)s %(error)s')},

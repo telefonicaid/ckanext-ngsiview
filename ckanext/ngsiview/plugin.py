@@ -29,7 +29,7 @@ class NgsiView(p.SingletonPlugin):
 
         p.toolkit.add_public_directory(config, 'theme/public')
         p.toolkit.add_template_directory(config, 'theme/templates')
-        p.toolkit.add_resource('theme/public', 'ckanext-textview')
+        p.toolkit.add_resource('theme/public', 'ckanext-ngsiview')
 
     def before_map(self, m):
         m.connect('/dataset/{id}/resource/{resource_id}/ngsiproxy',
@@ -75,7 +75,7 @@ class NgsiView(p.SingletonPlugin):
             if same_domain or proxy_enabled:
                 if self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not toolkit.c.user:
                     return False
-                elif self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'false' and not self.oauth2_is_enabled:
+                elif self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not self.oauth2_is_enabled:
                    return False
                 elif (resource['url'].lower().find('/querycontext') != -1
                       and request.path.find(pattern) != -1 and 'payload' not in resource):
@@ -88,7 +88,7 @@ class NgsiView(p.SingletonPlugin):
             return False
 
     def setup_template_variables(self, context, data_dict):
-        metadata = {'ngsi_formats': self.ngsi_formats}
+        metadata = {'ngsi_formats': self.NGSI_FORMATS}
 
         if not datapreview.on_same_domain(data_dict):
             if self.check_query(data_dict['resource']):
