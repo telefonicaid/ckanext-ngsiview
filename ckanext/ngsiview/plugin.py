@@ -93,6 +93,8 @@ class NgsiView(p.SingletonPlugin):
         if not datapreview.on_same_domain(data_dict):
             if self.check_query(data_dict['resource']):
                 url = self.get_proxified_ngsi_url(data_dict)
+                data_dict['resource']['url'] = url
+
             else:
                 url = proxy.get_proxified_resource_url(data_dict)
 
