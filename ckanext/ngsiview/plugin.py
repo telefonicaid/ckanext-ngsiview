@@ -33,11 +33,11 @@ class NgsiView(p.SingletonPlugin):
 
     def before_map(self, m):
         m.connect('/dataset/{id}/resource/{resource_id}/ngsiproxy',
-                  controller='ckanext.ngsipreview.controller:ProxyNGSIController', action='proxy_ngsi_resource')
+                  controller='ckanext.ngsiview.controller:ProxyNGSIController', action='proxy_ngsi_resource')
         return m
 
     def get_proxified_ngsi_url(self, data_dict):
-        url = h.url_for(action='proxy_ngsi_resource', controller='ckanext.ngsipreview.controller:ProxyNGSIController',
+        url = h.url_for(action='proxy_ngsi_resource', controller='ckanext.ngsiview.controller:ProxyNGSIController',
                         id=data_dict['package']['name'], resource_id=data_dict['resource']['id'])
         log.info('NGSI proxified url is {0}'.format(url))
         return url
