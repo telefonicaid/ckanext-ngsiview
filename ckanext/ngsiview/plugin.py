@@ -47,7 +47,7 @@ class NgsiView(p.SingletonPlugin):
             setattr(self, key, value)
         p.toolkit.add_public_directory(config, 'theme/public')
         p.toolkit.add_template_directory(config, 'theme/templates')
-        p.toolkit.add_resource('theme/public', 'ckanext-textview')
+        p.toolkit.add_resource('theme/public', 'ckanext-ngsiview')
 
     def info(self):
         return {'name': 'ngsiview',
