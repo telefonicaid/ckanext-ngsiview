@@ -74,7 +74,7 @@ class NgsiView(p.SingletonPlugin):
 
         if proxy_enabled and not same_domain:
             if check_query(resource):
-                if oauth_req == 'true' and (not toolkit.c.user or not oauth2_enabled):
+                if oauth_req == 'true' and (not p.toolkit.c.user or not oauth2_enabled):
                     metadata = "hace falta token y no se puede conseguir"
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
@@ -90,6 +90,6 @@ class NgsiView(p.SingletonPlugin):
         return {'preview_metadata': json.dumps(metadata),
                 'resource_json': json.dumps(data_dict['resource']),
                 'resource_url': json.dumps(url)}
-    
+
     def view_template(self, context, data_dict):
         return 'ngsi.html'
