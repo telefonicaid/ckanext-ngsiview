@@ -2,6 +2,7 @@ import logging
 
 from ckan.common import json
 import ckan.plugins as p
+import ckan.lib.helpers as h
 import ckanext.resourceproxy.plugin as proxy
 import ckan.lib.datapreview as datapreview
 
