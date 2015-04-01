@@ -24,10 +24,21 @@ def check_query(resource):
 
 class NgsiView(p.SingletonPlugin):
 
-    NGSI_FORMATS = ['ngsi9', 'ngsi10']
+    p.implements(p.IRoutes, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourceView, inherit=True)
+
+    def before_map(self, m):
+        m.connect('/dataset/{id}/resource/{resource_id}/ngsiproxy',
+        controller='ckanext.ngsiview.controller:ProxyNGSIController', action='proxy_ngsi_resource')
+        return m
+
+    def get_proxified_ngsi_url(self, data_dict):
+        url = h.url_for(action='proxy_ngsi_resource', controller='ckanext.ngsiview.controller:ProxyNGSIController',
+        id=data_dict['package']['name'], resource_id=data_dict['resource']['id'])
+        log.info('Proxified url is {0}'.format(url))
+        return url
 
     def update_config(self, config):
         formats = get_formats(config)
@@ -78,7 +89,7 @@ class NgsiView(p.SingletonPlugin):
                     metadata = "hace falta token y no se puede conseguir"
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
-                    url = proxy.get_proxified_resource_url(data_dict)
+                    url = self.get_proxified_ngsi_url(data_dict)
                     data_dict['resource']['url'] = url
             else:
                 metadata = "el proxy esta y no existe ngsi (archivo)"
