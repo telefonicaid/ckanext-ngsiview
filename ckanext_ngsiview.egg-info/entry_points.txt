@@ -1,4 +1,0 @@
-
-        [ckan.plugins]
-        ngsiview=ckanext.ngsiview.plugin:NgsiviewPlugin
-    
