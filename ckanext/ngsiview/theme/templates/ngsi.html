@@ -1,7 +1,22 @@
 {% extends 'dataviewer/base.html' %}
-
-{% block subtitle %}{% endblock %}
 {% block page %}
+    <div style="" id="map" class="map" data-module="ngsipreviewmap" style="position: relative; width: 830px; overflow:hidden;">
+        <div class="ol-overlaycontainer">
+            <div style="position: relative; left:100px; overflow: hidden; width: 100%;" class="ol-viewport">
+                <div class="ol-overlaycontainer">
+                    <div style="position: absolute; display: none;">
+                        <div id="popup"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br>
+    <pre data-module="ngsiview" style="position: relative; width: 830px;overflow:hidden;">
+    <div class="loading">
+        {{ _('Loading...') }}
+    </div>
+    </pre>
     {% block scripts %}
         <script>
             var preload_resource = {{ h.literal(resource_json) }};
@@ -10,5 +25,5 @@
         </script>
     {% endblock %}
     <H1>{{ _(h.literal(resource_json)) }}</H1>
-
+{% resource 'ckanext-ngsiview/main' %}
 {% endblock %}
