@@ -1,3 +1,19 @@
+function mapZoom(){
+    var pan = ol.animation.pan({
+        duration: 2000,
+        source: /** @type {ol.Coordinate} */ (view.getCenter())
+    });
+    map.beforeRender(pan);
+    view.setCenter(autofocus);
+
+    var zoom = ol.animation.zoom({
+        duration: 2000,
+        resolution: map.getView().getResolution()
+    });
+    map.beforeRender(zoom);
+    map.getView().setZoom(autozoom);
+}
+
 ckan.module('ngsiviewmap',function(jQuery,_){
     return{
 	options:{
@@ -290,21 +306,6 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                     if(level>11){level = 11;}
                     autozoom = zoomlist[level];
 
-                    function mapZoom(){
-                        var pan = ol.animation.pan({
-                            duration: 2000,
-                            source: /** @type {ol.Coordinate} */ (view.getCenter())
-                        });
-                        map.beforeRender(pan);
-                        view.setCenter(autofocus);
-
-                        var zoom = ol.animation.zoom({
-                            duration: 2000,
-                            resolution: map.getView().getResolution()
-                        });
-                        map.beforeRender(zoom);
-                        map.getView().setZoom(autozoom);
-                    }
                     setTimeout(mapZoom, 2000);
 
                     // change mouse cursor when over marker
