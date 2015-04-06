@@ -95,13 +95,9 @@ class NgsiView(p.SingletonPlugin):
                     view_enable = [False, details]
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
-                    if resource['url'].lower().find('/querycontext') != -1 and 'payload' not in resource:
-                        details = "Please add a payload to complete the query"
-                        view_enable = [False, details]
-                    else:
-                        url = self.get_proxified_ngsi_url(data_dict)
-                        data_dict['resource']['url'] = url
-                        view_enable = [True, 'OK']
+                    url = self.get_proxified_ngsi_url(data_dict)
+                    data_dict['resource']['url'] = url
+                    view_enable = [True, 'OK']
 
             else:
                 details = "This is not a ContextBroker query, pleas check CBdocurl"
