@@ -24,6 +24,6 @@
             var preview_metadata = {{ h.literal(preview_metadata) }};
         </script>
     {% endblock %}
-    <H1>{{ _(h.literal(resource_json)) }}</H1>
+    <H1>{{ _(h.literal(preview_metadata)) }}</H1>
 {% resource 'ckanext-ngsiview/main' %}
 {% endblock %}
