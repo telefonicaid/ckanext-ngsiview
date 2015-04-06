@@ -9,7 +9,9 @@ ckan.module('ngsiview',function(jQuery,_){
 			},
 			initialize:function(){
 			    var self=this;
-			    var p;p=this.options.parameters;
+			    var p;
+			    p=this.options.parameters;
+			    alert(view_enable);
                 jQuery.ajax(resource_url,{type:p.type,contentType:p.contentType,dataType:p.dataType,success:function(data,textStatus,jqXHR){
                     data=p.dataConverter?p.dataConverter(data):data;
                     var highlighted;
@@ -19,6 +21,8 @@ ckan.module('ngsiview',function(jQuery,_){
                     self.el.html(highlighted);
                     self.el.style.overflow="hidden";
                 },
-            error:function(jqXHR,textStatus,errorThrown){
-                if(textStatus=='error'&&jqXHR.responseText.length){self.el.html(jqXHR.responseText);}
-                else{self.el.html(self.i18n('error',{text:textStatus,error:errorThrown}));}}});}};});
+                error:function(jqXHR,textStatus,errorThrown){
+                    if(textStatus=='error'&&jqXHR.responseText.length){self.el.html(jqXHR.responseText);}
+                    else{self.el.html(self.i18n('error',{text:textStatus,error:errorThrown}));}}});
+
+            }};});
