@@ -10,7 +10,7 @@ ckan.module('ngsiview',function(jQuery,_){
 			initialize:function(){
 			    var self=this;
 			    var p;p=this.options.parameters;
-                jQuery.ajax(preload_resource['url'],{type:p.type,contentType:p.contentType,dataType:p.dataType,success:function(data,textStatus,jqXHR){
+                jQuery.ajax(resource_url,{type:p.type,contentType:p.contentType,dataType:p.dataType,success:function(data,textStatus,jqXHR){
                     data=p.dataConverter?p.dataConverter(data):data;
                     var highlighted;
                     if(p.language){highlighted=hljs.highlight(p.language,data,true).value;}

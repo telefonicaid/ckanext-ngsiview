@@ -10,7 +10,7 @@ ckan.module('ngsiviewmap',function(jQuery,_){
         var self=this;
         var p;
         p=this.options.parameters;
-        jQuery.ajax(preload_resource['url'],{
+        jQuery.ajax(resource_url,{
 	        type:p.type,
 	        contentType:p.contentType,
 	        dataType:p.dataType,
