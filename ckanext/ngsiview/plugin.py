@@ -68,7 +68,10 @@ class NgsiView(p.SingletonPlugin):
         same_domain = datapreview.on_same_domain(data_dict)
 
         if format_lower in self.ngsi_formats and check_query(resource):
-            return same_domain or proxy_enabled
+            if check_query(resource):
+                return same_domain or proxy_enabled
+            else:
+                return False
         else:
             return False
 
@@ -87,21 +90,29 @@ class NgsiView(p.SingletonPlugin):
         if proxy_enabled and not same_domain:
             if check_query(resource):
                 if oauth_req == 'true' and (not p.toolkit.c.user or not oauth2_enabled):
-                    metadata = "hace falta token y no se puede conseguir"
+                    details = "This query may need Oauth-token, please check if the token field on resource_edit is correct"
+                    view_enabled = [False, details]
+                    h.flash_error(details, allow_html=False)
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
                     url = self.get_proxified_ngsi_url(data_dict)
+                    view_enabled = [True, details]
                     data_dict['resource']['url'] = url
             else:
-                metadata = "el proxy esta y no existe ngsi (archivo)"
+                details = "This is not a ContextBroker query, pleas check CBdocurl"
+                view_enabled = [False, details]
+                h.flash_error(details, allow_html=False)
                 url = proxy.get_proxified_resource_url(data_dict)
         else:
-            metadata = "falta el proxy o es un recurso externo y no existe ngsi archivo)"
-            url = ''
+                details = "proxy o archivo"
+                view_enabled = [False, details]
+                h.flash_error(details, allow_html=False)
+                url = ''
 
         return {'preview_metadata': json.dumps(metadata),
                 'resource_json': json.dumps(data_dict['resource']),
-                'resource_url': json.dumps(url)}
+                'resource_url': json.dumps(url),
+                'view_enabled':json.dumps(view_enabled)}
 
     def view_template(self, context, data_dict):
         return 'ngsi.html'
