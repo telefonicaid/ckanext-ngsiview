@@ -38,7 +38,7 @@
         </a>
       </li>
       {% if res.url and h.is_url(res.url) %}
-        {% if res.url.lower().find('/querycontext')== 0 and res.url.lower().find('/contextentities/')== 0 %}
+        {% if res.url.lower().find('/querycontext')== -1 and res.url.lower().find('/contextentities/')== -1 %}
           <li>
             <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
               {% if res.has_views %}
