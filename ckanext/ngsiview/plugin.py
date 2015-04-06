@@ -96,7 +96,7 @@ class NgsiView(p.SingletonPlugin):
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
                     url = self.get_proxified_ngsi_url(data_dict)
-                    view_enabled = [True, details]
+                    view_enabled = [True, 'OK']
                     data_dict['resource']['url'] = url
             else:
                 details = "This is not a ContextBroker query, pleas check CBdocurl"

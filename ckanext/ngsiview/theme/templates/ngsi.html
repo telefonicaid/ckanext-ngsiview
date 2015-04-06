@@ -22,8 +22,9 @@
             var preload_resource = {{ h.literal(resource_json) }};
             var resource_url = {{ h.literal(resource_url) }};
             var preview_metadata = {{ h.literal(preview_metadata) }};
+            var view_enabled = {{ h.literal(view_enabled) }};
         </script>
     {% endblock %}
-    <H1>{{ _(h.literal(preview_metadata)) }}</H1>
+    <H1>{{ _(h.literal(view_enabled)) }}</H1>
 {% resource 'ckanext-ngsiview/main' %}
 {% endblock %}
