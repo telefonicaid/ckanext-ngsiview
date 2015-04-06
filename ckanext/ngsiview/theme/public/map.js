@@ -1,4 +1,4 @@
-function mapZoom(){
+function mapZoom(autofocus,autozoom){
     var pan = ol.animation.pan({
         duration: 2000,
         source: /** @type {ol.Coordinate} */ (view.getCenter())

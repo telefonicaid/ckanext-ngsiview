@@ -293,8 +293,8 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                     if(level>11){level = 11;}
                     autozoom = zoomlist[level];
 
-                    x=$('map.js');
-                    setTimeout(x.mapZoom, 2000);
+                    x=$('./map.js');
+                    setTimeout(x.mapZoom(autofocus,autozoom), 2000);
 
                     // change mouse cursor when over marker
                     map.on('pointermove', function(e) {
