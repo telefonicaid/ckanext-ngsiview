@@ -92,29 +92,26 @@ class NgsiView(p.SingletonPlugin):
             if check_query(resource):
                 if oauth_req == 'true' and (not p.toolkit.c.user or not oauth2_enabled):
                     details = "This query may need Oauth-token, please check if the token field on resource_edit is correct"
-                    view_enabled = [False, details]
-                    h.flash_error(details, allow_html=False)
+                    base.abort(409, detail=details)
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
+                    if resource['url'].lower().find('/querycontext') != -1 and 'payload' not in resource:
+                        details = "Please add a payload to complete the query"
+                        base.abort(409, detail=details)
                     url = self.get_proxified_ngsi_url(data_dict)
-                    view_enabled = [True, 'OK']
-                    base.abort(200, detail='OK')
                     data_dict['resource']['url'] = url
             else:
                 details = "This is not a ContextBroker query, pleas check CBdocurl"
-                view_enabled = [False, details]
-                h.flash_error(details, allow_html=False)
+                base.abort(409, detail=details)
                 url = proxy.get_proxified_resource_url(data_dict)
         else:
                 details = "proxy o archivo"
-                view_enabled = [False, details]
-                h.flash_error(details, allow_html=False)
+                base.abort(409, detail=details)
                 url = ''
 
         return {'preview_metadata': json.dumps(metadata),
                 'resource_json': json.dumps(data_dict['resource']),
-                'resource_url': json.dumps(url),
-                'view_enabled':json.dumps(view_enabled)}
+                'resource_url': json.dumps(url)}
 
     def view_template(self, context, data_dict):
         return 'ngsi.html'
