@@ -85,8 +85,9 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                         document.getElementById('map').style.border = '0px';
                     }
 
-                x=$('map.js');
-                x.launchmap(pos_list);
+                var x;
+                x=$(document);
+                x.launch_map(pos_list);
 
                 },
                 error:function(jqXHR,textStatus,errorThrown){
