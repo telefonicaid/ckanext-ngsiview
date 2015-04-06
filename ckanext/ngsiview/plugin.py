@@ -92,6 +92,7 @@ class NgsiView(p.SingletonPlugin):
             if check_query(resource):
                 if oauth_req == 'true' and (not p.toolkit.c.user or not oauth2_enabled):
                     details = "This query may need Oauth-token, please check if the token field on resource_edit is correct"
+                    h.flash_error(details, allow_html=False)
                     view_enable = [False, details]
                     url = proxy.get_proxified_resource_url(data_dict)
                 else:
@@ -101,10 +102,12 @@ class NgsiView(p.SingletonPlugin):
 
             else:
                 details = "This is not a ContextBroker query, pleas check CBdocurl"
+                h.flash_error(details, allow_html=False)
                 view_enable = [False, details]
                 url = proxy.get_proxified_resource_url(data_dict)
         else:
                 details = "proxy o archivo"
+                h.flash_error(details, allow_html=False)
                 view_enable = [False, details]
                 url = ''
 
