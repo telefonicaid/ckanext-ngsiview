@@ -1,6 +1,6 @@
 {% extends 'dataviewer/base.html' %}
 {% block page %}
-    <div style="" id="map" class="map" data-module="ngsiviewmap" style="position: relative; width: 830px; overflow:hidden;">
+    <div style="" id="map" class="map" data-module="ngsiviewmap" style="position: relative; width: 90%; overflow:hidden;">
         <div class="ol-overlaycontainer">
             <div style="position: relative; left:100px; overflow: hidden; width: 100%;" class="ol-viewport">
                 <div class="ol-overlaycontainer">
@@ -25,6 +25,5 @@
             var view_enable = {{ h.literal(view_enable) }};
         </script>
     {% endblock %}
-    <H1>{{ _(h.literal(view_enabled)) }}</H1>
 {% resource 'ckanext-ngsiview/main' %}
 {% endblock %}
