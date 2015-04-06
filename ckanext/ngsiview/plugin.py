@@ -3,6 +3,7 @@ import logging
 from ckan.common import json
 import ckan.plugins as p
 import ckan.lib.helpers as h
+import ckan.lib.base as base
 import ckanext.resourceproxy.plugin as proxy
 import ckan.lib.datapreview as datapreview
 
@@ -97,6 +98,7 @@ class NgsiView(p.SingletonPlugin):
                 else:
                     url = self.get_proxified_ngsi_url(data_dict)
                     view_enabled = [True, 'OK']
+                    base.abort(200, detail='OK')
                     data_dict['resource']['url'] = url
             else:
                 details = "This is not a ContextBroker query, pleas check CBdocurl"
