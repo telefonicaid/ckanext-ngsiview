@@ -1,5 +1,3 @@
-
-
 ckan.module('ngsiviewmap',function(jQuery,_){
     return{
 	options:{
