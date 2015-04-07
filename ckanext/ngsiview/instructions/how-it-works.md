@@ -18,6 +18,7 @@ The way to create a NGSI resource is fairly simple:
 
    If your query is a convenience type, your resource has already been created, on the contrary if it is a standard operation you have to do the next step.
 
+
 5. Standard operations only: Click on manage to edit your resource, now an additional field has appeared, complete it with a payload and click on update to save your query payload.
 
    ![image4](/ckanext/ngsiview/instructions/img4.png?raw=true)
