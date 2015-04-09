@@ -20,6 +20,7 @@ import logging
 
 from ckan.common import json
 import ckan.plugins as p
+from ckan.plugins import toolkit
 import ckan.lib.helpers as h
 import ckan.lib.datapreview as datapreview
 
@@ -162,7 +163,7 @@ class NgsiView(p.SingletonPlugin):
         format_lower = resource['format'].lower()
         if format_lower in self.NGSI_FORMATS:
             if resource['on_same_domain'] or self.proxy_is_enabled:
-                if check_query(resource) and oauth_req == 'true' and not p.toolkit.c.user:
+                if check_query(resource) and oauth_req == 'true' and not toolkit.c.user:
                     details = "In order to see this resource properly, you need to be logged in"
                     h.flash_error(details, allow_html=False)
                     return {'can_preview': False, 'fixable': details, 'quality': 2}
