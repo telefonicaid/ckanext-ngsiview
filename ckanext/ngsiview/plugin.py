@@ -22,11 +22,12 @@ from ckan.common import json
 import ckan.plugins as p
 from ckan.plugins import toolkit
 import ckan.lib.helpers as h
-import ckan.lib.datapreview as datapreview
 
 log = logging.getLogger(__name__)
 
 try:
+    import ckan.lib.datapreview as datapreview
+    from ckan.common import _, request
     import ckanext.resourceproxy.plugin as proxy
 except ImportError:
     pass
@@ -161,17 +162,19 @@ class NgsiView(p.SingletonPlugin):
             oauth_req = resource['oauth_req']
 
         format_lower = resource['format'].lower()
+        pattern = "/dataset/"+data_dict['package']['name']+"/resource/"
         if format_lower in self.NGSI_FORMATS:
             if resource['on_same_domain'] or self.proxy_is_enabled:
-                if check_query(resource) and oauth_req == 'true' and not toolkit.c.user:
+                if self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not toolkit.c.user:
                     details = "In order to see this resource properly, you need to be logged in"
                     h.flash_error(details, allow_html=False)
                     return {'can_preview': False, 'fixable': details, 'quality': 2}
-                elif check_query(resource) and oauth_req == 'true' and not self.oauth2_is_enabled:
+                elif self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not self.oauth2_is_enabled:
                    details = "Enable oauth2 extension"
                    h.flash_error(details, allow_html=False)
                    return {'can_preview': False, 'fixable': details, 'quality': 2}
-                elif (resource['url'].lower().find('/querycontext') != -1 and 'payload' not in resource):
+                elif (resource['url'].lower().find('/querycontext') != -1
+                      and request.path.find(pattern) != -1 and 'payload' not in resource):
                     details = "Add a payload to complete the query"
                     h.flash_error(details, allow_html=False)
                     return {'can_preview': False, 'fixable': details, 'quality': 2}
