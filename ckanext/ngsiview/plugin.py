@@ -20,7 +20,6 @@ import logging
 
 from ckan.common import json
 import ckan.plugins as p
-from ckan.plugins import toolkit
 import ckan.lib.helpers as h
 
 log = logging.getLogger(__name__)
@@ -48,6 +47,7 @@ class NgsiView(p.SingletonPlugin):
 
     if p.toolkit.ckan.__version__ == '2.3':
         p.implements(p.IResourceView, inherit=True)
+        print AAAA
     else:
         p.implements(p.IResourcePreview, inherit=True)
 
@@ -165,7 +165,7 @@ class NgsiView(p.SingletonPlugin):
         pattern = "/dataset/"+data_dict['package']['name']+"/resource/"
         if format_lower in self.NGSI_FORMATS:
             if resource['on_same_domain'] or self.proxy_is_enabled:
-                if self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not toolkit.c.user:
+                if self.check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not p.toolkit.c.user:
                     details = "In order to see this resource properly, you need to be logged in"
                     h.flash_error(details, allow_html=False)
                     return {'can_preview': False, 'fixable': details, 'quality': 2}

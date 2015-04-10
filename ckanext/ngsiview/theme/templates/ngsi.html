@@ -18,12 +18,9 @@
     </div>
     </pre>
     {% block scripts %}
-        {% if h.literal(c.preview_metadata) != '' %}
+        {% if h.literal(view_enable) == '' %}
         <script>
-            var preload_resource = "";
-            var resource_url = "";
             var preview_metadata = {{ h.literal(c.preview_metadata) }};
-            var view_enable = "";
         </script>
         {% else %}
         <script>
