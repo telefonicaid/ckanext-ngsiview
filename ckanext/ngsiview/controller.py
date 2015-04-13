@@ -57,6 +57,10 @@ def proxy_ngsi_resource(context, data_dict):
         for i in range(2):
             if url.lower().find('/querycontext') != -1:
                 if 'payload' in resource:
+                    if resource['payload'] == "":
+                        details = 'Please add a  payload to complete the query.'
+                        base.abort(409, detail=details)
+
                     resource['payload'] = resource['payload'].replace("'", '"')
                     resource['payload'] = resource['payload'].replace(" ", "")
                 else:
