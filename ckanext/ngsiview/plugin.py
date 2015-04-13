@@ -155,26 +155,43 @@ class NgsiView(p.SingletonPlugin):
 
             if proxy_enabled and not same_domain:
                 if check_query(resource):
-                    if oauth_req == 'true' and (not p.toolkit.c.user or not oauth2_enabled):
-                        details = "This query may need Oauth-token, please check if the token field on resource_edit is correct"
-                        h.flash_error(details, allow_html=False)
+                    if oauth_req == 'true' and not p.toolkit.c.user:
+                        details = "</br></br>In order to see this resource properly, you need to be logged in.</br></br></br>"
+                        f_details = "In order to see this resource properly, you need to be logged in."
+                        h.flash_error(f_details, allow_html=False)
                         view_enable = [False, details]
                         url = proxy.get_proxified_resource_url(data_dict)
+
+                    elif oauth_req == 'true' and not oauth2_enabled:
+                        details = "</br></br>In order to see this resource properly, enable oauth2 extension</br></br></br>"
+                        f_details = "In order to see this resource properly, enable oauth2 extension."
+                        h.flash_error(f_details, allow_html=False)
+                        view_enable = [False, details]
+                        url = proxy.get_proxified_resource_url(data_dict)
+
                     else:
                         url = self.get_proxified_ngsi_url(data_dict)
                         data_dict['resource']['url'] = url
                         view_enable = [True, 'OK']
 
                 else:
-                    details = "This is not a ContextBroker query, pleas check CBdocurl"
-                    h.flash_error(details, allow_html=False)
+                    details = "</br></br>This is not a ContextBroker query, please check <a href='https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide'>Orion Context Broker documentation</a></br></br></br>"
+                    f_details = "This is not a ContextBroker query, please check Orion Context Broker documentation."
+                    h.flash_error(f_details, allow_html=False)
                     view_enable = [False, details]
                     url = proxy.get_proxified_resource_url(data_dict)
             else:
-                    details = "proxy o archivo"
-                    h.flash_error(details, allow_html=False)
-                    view_enable = [False, details]
-                    url = ''
+                if proxy_enabled:
+                    details = "</br></br>Enable resource_proxy</br></br></br>"
+                    f_details = "Enable resource_proxy."
+
+                else:
+                    details = "</br></br>This is not a ContextBroker query, please check <a href='https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide'>Orion Context Broker documentation</a></br></br></br>"
+                    f_details = "This is not a ContextBroker query, please check Orion Context Broker documentation."
+
+                h.flash_error(f_details, allow_html=False)
+                view_enable = [False, details]
+                url = ''
 
             return {'preview_metadata': json.dumps(metadata),
                     'resource_json': json.dumps(data_dict['resource']),
