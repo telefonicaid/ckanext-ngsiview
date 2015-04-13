@@ -1,22 +1,21 @@
 {% extends 'dataviewer/base.html' %}
-
 {% block page %}
-    <div style="" id="map" class="map" data-module="ngsiviewmap" style="position: relative; width: 830px; overflow:hidden;">
+    <div style="" id="map" class="map" data-module="ngsiviewmap" style="position: relative; width: 90%; overflow:hidden;">
         <div class="ol-overlaycontainer">
-          <div style="position: relative; left:100px; overflow: hidden; width: 100%;" class="ol-viewport">
+            <div style="position: relative; left:100px; overflow: hidden; width: 100%;" class="ol-viewport">
                 <div class="ol-overlaycontainer">
-                        <div style="position: absolute; display: none;">
-                                <div id="popup"></div>
-                        </div>
+                    <div style="position: absolute; display: none;">
+                        <div id="popup"></div>
+                    </div>
                 </div>
-          </div>
+            </div>
         </div>
     </div>
     </br>
-    <pre data-module="ngsiview" style="position: relative; width: 830px;overflow:hidden;">
-        <div class="loading">
-           {{ _('Loading...') }}
-        </div>
+    <pre data-module="ngsiview" style="position: relative;overflow:hidden;">
+    <div class="loading">
+        {{ _('Loading...') }}
+    </div>
     </pre>
   {% block scripts %}
     {{ super() }}
