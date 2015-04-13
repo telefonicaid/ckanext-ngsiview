@@ -156,13 +156,13 @@ class NgsiView(p.SingletonPlugin):
             if proxy_enabled and not same_domain:
                 if check_query(resource):
                     if oauth_req == 'true' and not p.toolkit.c.user:
-                        details = "In order to see this resource properly, you need to be logged in"
+                        details = "</br></br>In order to see this resource properly, you need to be logged in</br></br>"
                         h.flash_error(details, allow_html=False)
                         view_enable = [False, details]
                         url = proxy.get_proxified_resource_url(data_dict)
 
                     elif oauth_req == 'true' and not oauth2_enabled:
-                        details = "In order to see this resource properly, enable oauth2 extension"
+                        details = "</br></br>In order to see this resource properly, enable oauth2 extension</br></br>"
                         h.flash_error(details, allow_html=False)
                         view_enable = [False, details]
                         url = proxy.get_proxified_resource_url(data_dict)
@@ -173,15 +173,15 @@ class NgsiView(p.SingletonPlugin):
                         view_enable = [True, 'OK']
 
                 else:
-                    details = "This is not a ContextBroker query,\nplease <H1>check</H1> https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide"
+                    details = "</br></br>This is not a ContextBroker query, please check <a href='https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide'>Orion Context Broker documentation</a></br></br>"
                     h.flash_error(details, allow_html=False)
                     view_enable = [False, details]
                     url = proxy.get_proxified_resource_url(data_dict)
             else:
                 if proxy_enabled:
-                    details = "Enable resource_proxy"
+                    details = "</br></br>Enable resource_proxy"
                 else:
-                    details = "This is not a ContextBroker query,\nplease check https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide"
+                    details = "</br></br>This is not a ContextBroker query, please check <a href='https://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide'>Orion Context Broker documentation</a></br></br>"
 
                 h.flash_error(details, allow_html=False)
                 view_enable = [False, details]
