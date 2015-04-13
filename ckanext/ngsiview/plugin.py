@@ -64,7 +64,8 @@ class NgsiView(p.SingletonPlugin):
         return url
 
     def update_config(self, config):
-
+        # This function is only maintained to allow proper functioning of the extension
+        # in ckan versions previous to ckan2.3
         p.toolkit.add_resource('theme/public', 'ckanext-ngsiview')
         p.toolkit.add_public_directory(config, 'theme/public')
 
@@ -73,6 +74,71 @@ class NgsiView(p.SingletonPlugin):
         else:
             p.toolkit.add_template_directory(config, 'theme/old/templates')
 
+    def configure(self, config):
+        self.proxy_is_enabled = config.get('ckan.resource_proxy_enabled')
+        if config.get('ckan.plugins').find('oauth2') != -1:
+            self.oauth2_is_enabled = True
+        else:
+            self.oauth2_is_enabled = False
+
+    def info(self):
+        return {'name': 'ngsiview',
+                'title': p.toolkit._('NGSI'),
+                'icon': 'file-text-alt',
+                'default_title': p.toolkit._('NGSI'),
+                'default_description': 'NGSI resource',
+                'always_available': False,
+                'iframed': True,
+                'preview_enabled': True,
+                'full_page_edit': False,
+                }
+
+    def can_view(self, data_dict):
+        resource = data_dict['resource']
+        format_lower = resource.get('format', '').lower()
+        proxy_enabled = p.plugin_loaded('resource_proxy')
+        same_domain = datapreview.on_same_domain(data_dict)
+
+        if format_lower in self.NGSI_FORMATS and check_query(resource):
+            if check_query(resource):
+                return same_domain or proxy_enabled
+            else:
+                return False
+        else:
+            return False
+
+    def can_preview(self, data_dict):
+        # This function is only maintained to allow proper functioning of the extension
+        # in ckan versions previous to ckan2.3
+        resource = data_dict['resource']
+        if 'oauth_req' not in resource:
+            oauth_req = 'false'
+        else:
+            oauth_req = resource['oauth_req']
+
+        format_lower = resource['format'].lower()
+        pattern = "/dataset/"+data_dict['package']['name']+"/resource/"
+        if format_lower in self.NGSI_FORMATS:
+            if resource['on_same_domain'] or self.proxy_is_enabled:
+                if check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not p.toolkit.c.user:
+                    details = "In order to see this resource properly, you need to be logged in"
+                    h.flash_error(details, allow_html=False)
+                    return {'can_preview': False, 'fixable': details, 'quality': 2}
+                elif check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not self.oauth2_is_enabled:
+                    details = "Enable oauth2 extension"
+                    h.flash_error(details, allow_html=False)
+                    return {'can_preview': False, 'fixable': details, 'quality': 2}
+                elif (resource['url'].lower().find('/querycontext') != -1
+                      and request.path.find(pattern) != -1 and 'payload' not in resource):
+                    details = "Add a payload to complete the query"
+                    h.flash_error(details, allow_html=False)
+                    return {'can_preview': False, 'fixable': details, 'quality': 2}
+                else:
+                    return {'can_preview': True, 'quality': 2}
+            else:
+                return {'can_preview': False, 'fixable': 'Enable resource_proxy', 'quality': 2}
+        else:
+            return {'can_preview': False}
 
     def setup_template_variables(self, context, data_dict):
         if p.toolkit.ckan.__version__ == '2.3':
@@ -123,76 +189,10 @@ class NgsiView(p.SingletonPlugin):
                     url = proxy.get_proxified_resource_url(data_dict)
                     p.toolkit.c.resource['url'] = url
 
-
-    def info(self):
-        return {'name': 'ngsiview',
-                'title': p.toolkit._('NGSI'),
-                'icon': 'file-text-alt',
-                'default_title': p.toolkit._('NGSI'),
-                'default_description': 'NGSI resource',
-                'always_available': False,
-                'iframed': True,
-                'preview_enabled': True,
-                'full_page_edit': False,
-                }
-
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-        format_lower = resource.get('format', '').lower()
-        proxy_enabled = p.plugin_loaded('resource_proxy')
-        same_domain = datapreview.on_same_domain(data_dict)
-
-        if format_lower in self.NGSI_FORMATS and check_query(resource):
-            if check_query(resource):
-                return same_domain or proxy_enabled
-            else:
-                return False
-        else:
-            return False
-
     def view_template(self, context, data_dict):
         return 'ngsi.html'
 
-##################
-    def configure(self, config):
-        self.proxy_is_enabled = config.get('ckan.resource_proxy_enabled')
-        if config.get('ckan.plugins').find('oauth2') != -1:
-            self.oauth2_is_enabled = True
-        else:
-            self.oauth2_is_enabled = False
-
-
-    def can_preview(self, data_dict):
-        resource = data_dict['resource']
-        if 'oauth_req' not in resource:
-            oauth_req = 'false'
-        else:
-            oauth_req = resource['oauth_req']
-
-        format_lower = resource['format'].lower()
-        pattern = "/dataset/"+data_dict['package']['name']+"/resource/"
-        if format_lower in self.NGSI_FORMATS:
-            if resource['on_same_domain'] or self.proxy_is_enabled:
-                if check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not p.toolkit.c.user:
-                    details = "In order to see this resource properly, you need to be logged in"
-                    h.flash_error(details, allow_html=False)
-                    return {'can_preview': False, 'fixable': details, 'quality': 2}
-                elif check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not self.oauth2_is_enabled:
-                    details = "Enable oauth2 extension"
-                    h.flash_error(details, allow_html=False)
-                    return {'can_preview': False, 'fixable': details, 'quality': 2}
-                elif (resource['url'].lower().find('/querycontext') != -1
-                      and request.path.find(pattern) != -1 and 'payload' not in resource):
-                    details = "Add a payload to complete the query"
-                    h.flash_error(details, allow_html=False)
-                    return {'can_preview': False, 'fixable': details, 'quality': 2}
-                else:
-                    return {'can_preview': True, 'quality': 2}
-            else:
-                return {'can_preview': False, 'fixable': 'Enable resource_proxy', 'quality': 2}
-        else:
-            return {'can_preview': False}
-
     def preview_template(self, context, data_dict):
+        # This function is only maintained to allow proper functioning of the extension
+        # in ckan versions previous to ckan2.3
         return 'ngsi.html'
-##################
