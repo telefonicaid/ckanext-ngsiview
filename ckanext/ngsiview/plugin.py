@@ -47,7 +47,6 @@ class NgsiView(p.SingletonPlugin):
 
     if p.toolkit.ckan.__version__ == '2.3':
         p.implements(p.IResourceView, inherit=True)
-        print AAAA
     else:
         p.implements(p.IResourcePreview, inherit=True)
 
