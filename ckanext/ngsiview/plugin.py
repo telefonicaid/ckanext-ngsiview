@@ -179,9 +179,9 @@ class NgsiView(p.SingletonPlugin):
                     h.flash_error(details, allow_html=False)
                     return {'can_preview': False, 'fixable': details, 'quality': 2}
                 elif check_query(resource) and request.path.find(pattern) != -1 and oauth_req == 'true' and not self.oauth2_is_enabled:
-                   details = "Enable oauth2 extension"
-                   h.flash_error(details, allow_html=False)
-                   return {'can_preview': False, 'fixable': details, 'quality': 2}
+                    details = "Enable oauth2 extension"
+                    h.flash_error(details, allow_html=False)
+                    return {'can_preview': False, 'fixable': details, 'quality': 2}
                 elif (resource['url'].lower().find('/querycontext') != -1
                       and request.path.find(pattern) != -1 and 'payload' not in resource):
                     details = "Add a payload to complete the query"
