@@ -11,13 +11,16 @@ ckan.module('ngsiview',function(jQuery,_){
 			    var self=this;
 			    var p;
 			    p=this.options.parameters;
+			    if(typeof(view_enable) == 'undefined'){
+			        view_enable[0] = true;
+			        resource_url = preload_resource['url']
+			    }
 			    if(view_enable[0]){
                     jQuery.ajax(resource_url,{type:p.type,contentType:p.contentType,dataType:p.dataType,success:function(data,textStatus,jqXHR){
                         data=p.dataConverter?p.dataConverter(data):data;
                         var highlighted;
                         if(p.language){highlighted=hljs.highlight(p.language,data,true).value;}
                         else{highlighted='<pre>'+data+'</pre>';}
-
                         self.el.html(highlighted);
                     },
                     error:function(jqXHR,textStatus,errorThrown){
