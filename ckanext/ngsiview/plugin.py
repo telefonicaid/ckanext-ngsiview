@@ -66,8 +66,13 @@ class NgsiView(p.SingletonPlugin):
 
     def update_config(self, config):
         p.toolkit.add_public_directory(config, 'theme/public')
-        p.toolkit.add_template_directory(config, 'theme/templates')
         p.toolkit.add_resource('theme/public', 'ckanext-ngsiview')
+
+        if p.toolkit.ckan.__version__ == '2.3':
+            p.toolkit.add_template_directory(config, 'theme/templates')
+        else:
+            p.toolkit.add_template_directory(config, 'theme/templates_')
+
 
     def setup_template_variables(self, context, data_dict):
         if p.toolkit.ckan.__version__ == '2.3':
