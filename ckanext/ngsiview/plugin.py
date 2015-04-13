@@ -72,7 +72,7 @@ class NgsiView(p.SingletonPlugin):
         if p.toolkit.ckan.__version__ == '2.3':
             p.toolkit.add_template_directory(config, 'theme/templates')
         else:
-            p.toolkit.add_template_directory(config, 'theme/old/templates')
+            p.toolkit.add_template_directory(config, 'theme/old_templates')
 
     def configure(self, config):
         self.proxy_is_enabled = config.get('ckan.resource_proxy_enabled')
