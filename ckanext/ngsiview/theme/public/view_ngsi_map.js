@@ -12,6 +12,7 @@ ckan.module('ngsiviewmap',function(jQuery,_){
         var p;
         p=this.options.parameters;
         if(typeof(view_enable) == 'undefined'){
+            view_enable = [];
             view_enable[0] = true;
             resource_url = preload_resource['url']
         }
