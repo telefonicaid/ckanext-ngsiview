@@ -159,6 +159,9 @@ class NgsiView(p.SingletonPlugin):
         self.proxy_is_enabled = config.get('ckan.resource_proxy_enabled')
         if config.get('ckan.plugins').find('oauth2') != -1:
             self.oauth2_is_enabled = True
+        else:
+            self.oauth2_is_enabled = False
+
 
     def can_preview(self, data_dict):
         resource = data_dict['resource']
