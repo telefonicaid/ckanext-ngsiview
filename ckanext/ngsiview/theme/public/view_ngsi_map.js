@@ -1,15 +1,14 @@
 ckan.module('ngsiviewmap',function(jQuery,_){
-    if(preload_resource['format'] in ['ngsi9', 'ngsi10']){
-        document.getElementById('map').style.display = "block";
-        return{
+    return{
 	options:{
 		i18n:{error:_('An error occurred: %(text)s %(error)s')},
 		parameters:{contentType:'application/json',
                     dataType:'json',
 			        dataConverter:function(data){return JSON.stringify(data,null,2);},
 			        language:'json',type:'GET'}},
-
     initialize:function(){
+    if(preload_resource['format'] in ['ngsi9', 'ngsi10']){
+        document.getElementById('map').style.display = "block";
         var self=this;
         var p;
         p=this.options.parameters;
@@ -343,6 +342,5 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                 document.getElementById('map').style.height = '0px';
                 document.getElementById('map').style.border = '0px';
             }
-	    }};
-	}	    
+	    }}};
 });
