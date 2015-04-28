@@ -1,5 +1,7 @@
 ckan.module('ngsiviewmap',function(jQuery,_){
-    return{
+    if(preload_resource['format'] in ['ngsi9', 'ngsi10']){
+        document.getElementById('map').style.display = "block";
+        return{
 	options:{
 		i18n:{error:_('An error occurred: %(text)s %(error)s')},
 		parameters:{contentType:'application/json',
@@ -11,6 +13,10 @@ ckan.module('ngsiviewmap',function(jQuery,_){
         var self=this;
         var p;
         p=this.options.parameters;
+
+        var map_content = "<div class='ol-overlaycontainer'><div class='ol-viewport'><div class='ol-overlaycontainer'><div id='prepopup'><div id='popup'></div></div></div></div></div>";
+        $('#map').append(map_content);
+
         if(typeof(view_enable) == 'undefined'){
             view_enable = [];
             view_enable[0] = true;
@@ -337,4 +343,6 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                 document.getElementById('map').style.height = '0px';
                 document.getElementById('map').style.border = '0px';
             }
-	    }};});
+	    }};
+	}	    
+});
