@@ -1,6 +1,6 @@
 ckan.module('ngsiviewchart',function(jQuery,_){
     if(preload_resource['format'] == 'ngsiSTH'){
-        document.getElementById('chart').style.display = "block";
+        document.getElementById('chart').style.height = '400px';
         $('#chart').highcharts({
             chart: {
                 type: 'spline'
