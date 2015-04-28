@@ -50,7 +50,7 @@ class NgsiView(p.SingletonPlugin):
     else:
         p.implements(p.IResourcePreview, inherit=True)
 
-    NGSI_FORMATS = ['ngsi9','ngsi10']
+    NGSI_FORMATS = ['ngsi9','ngsi10','ngsiSTH']
 
     def before_map(self, m):
         m.connect('/dataset/{id}/resource/{resource_id}/ngsiproxy',

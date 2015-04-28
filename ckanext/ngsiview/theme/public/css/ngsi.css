@@ -2,6 +2,10 @@
 pre{font-size:13px}
 .loading{font-weight:bold;font-family:sans-serif;font-size:16px;position:fixed;left:-20px;top:20px}
 .popover{min-width:350px;}
+.ol-viewport{position: relative; left:100px; overflow: hidden; width: 100%;}
 .popover-content{min-width:240px;position:relative;top:5px;}
 .map{height:400px;width:100%;border:1px solid rgba(0, 0, 0, 0.15);border-radius: 4px;}
+#map{position: relative; width: 90%; overflow:hidden;}
+#chart{width:100%; height:400px;}
 #popup{height:40px;width:100%;}
+#prepopup{position:absolute;display:none;}
