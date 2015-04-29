@@ -7,7 +7,7 @@ ckan.module('ngsiviewmap',function(jQuery,_){
 			        dataConverter:function(data){return JSON.stringify(data,null,2);},
 			        language:'json',type:'GET'}},
     initialize:function(){
-    if(preload_resource['format'] in ['ngsi9', 'ngsi10']){
+    if(preload_resource['format'].toLowerCase() == "ngsi9" || preload_resource['format'].toLowerCase() == "ngsi10"){
         document.getElementById('map').style.height = '400px';
         var self=this;
         var p;
