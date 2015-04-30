@@ -9,6 +9,7 @@ ckan.module('ngsiviewmap',function(jQuery,_){
     initialize:function(){
     if(preload_resource['format'].toLowerCase() == "ngsi9" || preload_resource['format'].toLowerCase() == "ngsi10"){
         document.getElementById('map').style.height = '400px';
+	document.getElementById('map').style.border = '1px solid rgba(0, 0, 0, 0.15)';
         var self=this;
         var p;
         p=this.options.parameters;
@@ -317,17 +318,6 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                         map.getView().setZoom(autozoom);
                     }
                     setTimeout(mapZoom, 2000);
-
-                    // change mouse cursor when over marker
-                    map.on('pointermove', function(e) {
-                        if (e.dragging) {
-                            $(element).popover('destroy');
-                            return;
-                        }
-                        var pixel = map.getEventPixel(e.originalEvent);
-                        var hit = map.hasFeatureAtPixel(pixel);
-                        map.getTarget().style.cursor = hit ? 'pointer' : '';
-                    });
 
                 },
                 error:function(jqXHR,textStatus,errorThrown){
