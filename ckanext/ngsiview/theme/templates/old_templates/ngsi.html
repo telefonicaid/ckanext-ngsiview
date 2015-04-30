@@ -1,20 +1,15 @@
 {% extends 'dataviewer/base.html' %}
 {% block page %}
+    <div id="view_container">
     <div id="chart" data-module="ngsiviewchart"></div>
     <div style="" id="map" class="map" data-module="ngsiviewmap"></div>
+    </div>
     </br>
     <pre data-module="ngsiview" style="position: relative;overflow:hidden;">
     <div class="loading">
         {{ _('Loading...') }}
     </div>
     </pre>
-  {% block scripts %}
-    {{ super() }}
-    <script>
-      var preview_metadata = {{ h.literal(c.preview_metadata) }};
-    </script>
-  {% endblock %}
-
   {% resource 'ckanext-ngsiview/main' %}
 
 {% endblock %}

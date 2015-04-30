@@ -1,6 +1,7 @@
 ckan.module('ngsiviewchart',function(jQuery,_){
     if(preload_resource['format'].toLowerCase() == 'ngsi-sth'){
         document.getElementById('chart').style.height = '400px';
+	document.getElementById('chart').style.border = '1px solid rgba(0, 0, 0, 0.15)';
         $('#chart').highcharts({
             chart: {
                 type: 'spline'
