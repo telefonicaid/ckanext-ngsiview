@@ -57,7 +57,8 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                                         var x;
                                         info += "<table style='font-size:85%;line-height:90%;'>";
                                         for(x=0;x<attributes.length;x++){
-                                            info += "<tr><td><div><strong>"+attributes[x].name+" : </strong></div></td><td><div>"+attributes[x].value+"</div></td></tr>";
+					    if (attributes[x].value.length > 40){attributes[x].value = attributes[x].value.substring(0, 37)+"...";}
+                                            info += "<tr><td><strong>"+attributes[x].name+": </strong></td><td style='padding-left:5px;'>"+attributes[x].value+"</td></tr>";
                                         }
                                         info += "</table>";
                                         dat.attrib = info;
@@ -78,9 +79,12 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                                 dat.pos = [lon,lat];
                                 dat.name = data.contextResponses[i]['contextElement']['id'];
                                 var x;
+                                info += "<table style='font-size:85%;line-height:90%;'>";
                                 for(x=0;x<attributes.length;x++){
-                                    info += "<div><strong>"+attributes[x].name+"</strong> : "+attributes[x].value+"</div>";
-                                }
+                                     if (attributes[x].value.length > 40){attributes[x].value = attributes[x].value.substring(0, 37)+"...";}
+                                         info += "<tr><td><strong>"+attributes[x].name+": </strong></td><td style='padding-left:5px;'>"+attributes[x].value+"</td></tr>";
+                                     }
+                                info += "</table>";
                                 dat.attrib = info;
                                 pos_list[pos_list.length] = dat;
                                 listlat[listlat.length] = lat;
