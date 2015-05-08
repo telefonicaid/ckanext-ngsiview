@@ -98,4 +98,7 @@
 .label[data-format*="ngsi10"] {
     background-color: #65C3D1;
 }
-
+.label[data-format="ngsi-sth"],
+.label[data-format*="ngsi-sth"] {
+    background-color: #FA8258;
+}
