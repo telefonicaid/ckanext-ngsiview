@@ -36,31 +36,44 @@ def proxy_ngsi_resource(context, data_dict):
     log.info('Proxify resource {id}'.format(id=resource_id))
     resource = logic.get_action('resource_show')(context, {'id': resource_id})
 
-    if 'oauth_req' in resource and resource['oauth_req'] == 'true':
-        token = p.toolkit.c.usertoken['access_token']
-        headers = {'X-Auth-Token': token, 'Content-Type': 'application/json', 'Accept': 'application/json'}
-    else:
-        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-
-    if 'tenant' in resource:
-        headers['Fiware-Service'] = resource['tenant']
-    if 'service_path' in resource:
-        headers['Fiware-ServicePath'] = resource['service_path']
-
-    url = resource['url']
-    parts = urlparse.urlsplit(url)
-
-    if not parts.scheme or not parts.netloc:
-        base.abort(409, detail='Invalid URL.')
-
     try:
+        if 'oauth_req' in resource and resource['oauth_req'] == 'true':
+            data = {
+                "auth": {
+                    "identity": {
+                        "methods": [
+                            "oauth2"
+                        ],
+                        "oauth2": {
+                            "access_token_id": p.toolkit.c.usertoken['access_token']
+                        }
+                    }
+                }
+            }
+            payload = json.dumps(data)
+            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+            response = requests.post("http://cloud.lab.fiware.org:4730/v3/auth/tokens", headers=headers, data=payload)
+            response.raise_for_status()
+            token = response.headers['x-subject-token']
+
+            headers = {'X-Auth-Token': token, 'Content-Type': 'application/json', 'Accept': 'application/json'}
+        else:
+            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+
+        if 'tenant' in resource:
+            headers['Fiware-Service'] = resource['tenant']
+        if 'service_path' in resource:
+            headers['Fiware-ServicePath'] = resource['service_path']
+
+        url = resource['url']
+        parts = urlparse.urlsplit(url)
+
+        if not parts.scheme or not parts.netloc:
+            base.abort(409, detail='Invalid URL.')
+
         for i in range(2):
             if url.lower().find('/querycontext') != -1:
                 if 'payload' in resource:
-                    if resource['payload'] == "":
-                        details = 'Please add a  payload to complete the query.'
-                        base.abort(409, detail=details)
-
                     resource['payload'] = resource['payload'].replace("'", '"')
                     resource['payload'] = resource['payload'].replace(" ", "")
                 else:
@@ -103,7 +116,7 @@ def proxy_ngsi_resource(context, data_dict):
                 base.abort(409, headers={'content-encoding': ''}, detail=details)
 
     except ValueError:
-        details = 'There is a problem with the payload, please check if the query is properly parsed.'
+        details = ''
         base.abort(409, detail=details)
     except requests.HTTPError:
         details = 'Could not proxy ngsi_resource. We are working to resolve this issue as quickly as possible'
@@ -121,3 +134,4 @@ class ProxyNGSIController(base.BaseController):
         data_dict = {'resource_id': resource_id}
         context = {'model': base.model, 'session': base.model.Session, 'user': base.c.user or base.c.author}
         return proxy_ngsi_resource(context, data_dict)
+
