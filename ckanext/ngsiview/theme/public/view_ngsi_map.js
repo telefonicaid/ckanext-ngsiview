@@ -97,6 +97,22 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                                 document.getElementById('map').style.height = '0px';
                                 document.getElementById('map').style.border = '0px';
                             }
+		            
+                            var dbtn ="<a id='dbtn' class='btn btn-primary'><b>Download</b></a>";
+                                $("#chart").before(dbtn);
+                                document.getElementById('dbtn').addEventListener('click', function () {
+					var d_file = data.toSource();
+					d_file = d_file.replace("(", "").replace(")", "");
+                                        var a         = document.createElement('a');
+                                        a.href        = 'data:attachment/json,' + d_file;
+                                        a.target      = '_blank';
+                                        a.download    = 'data.json';
+
+                                        document.body.appendChild(a);
+                                        a.click();
+                                }, false);
+
+
 
                             var iconStyle = new ol.style.Style({
                                 image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
