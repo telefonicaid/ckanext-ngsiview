@@ -9,3 +9,5 @@ pre{font-size:13px}
 #chart{height:0px;border:0px;border-radius: 4px;}
 #popup{height:60px;width:5px;}
 #prepopup{position:absolute;display:none;}
+#dbtn{position:relative;left:785px;margin:5px;}
+.dygraph-legend{text-align:left  !important;left: 100px !important;top: 5px !important;;width:600px !important; background-color: transparent !important;}
