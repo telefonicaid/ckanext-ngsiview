@@ -21,7 +21,7 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                 if(typeof(view_enable) == 'undefined'){
                     view_enable = [];
                     view_enable[0] = true;
-                    resource_url = preload_resource['url']
+                    resource_url = preload_resource['url'];
                 }
                 if(view_enable[0]){
                     jQuery.ajax(resource_url,{
@@ -98,15 +98,15 @@ ckan.module('ngsiviewmap',function(jQuery,_){
                                 document.getElementById('map').style.border = '0px';
                             }
 		            
-                            var dbtn ="<a id='dbtn' class='btn btn-primary'><b>Download</b></a>";
-                                $("#chart").before(dbtn);
+				var dbtn ="<div id='buttonbar'><a id='dbtn' class='btn btn-primary'><b>Download</b></a></div>";
+                                $("#map").before(dbtn);
                                 document.getElementById('dbtn').addEventListener('click', function () {
 					var d_file = data.toSource();
 					d_file = d_file.replace("(", "").replace(")", "");
                                         var a         = document.createElement('a');
                                         a.href        = 'data:attachment/json,' + d_file;
                                         a.target      = '_blank';
-                                        a.download    = 'data.json';
+                                        a.download    = preload_resource['name']+'.json';
 
                                         document.body.appendChild(a);
                                         a.click();
