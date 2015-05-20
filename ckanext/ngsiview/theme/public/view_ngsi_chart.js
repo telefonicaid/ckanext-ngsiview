@@ -17,14 +17,14 @@ ckan.module('ngsiviewchart',function(jQuery,_){
                 resource_url = preload_resource['url']
             }
 
-	    var DygraphContent = "";
 	    function makeGraph(DygraphContent){
      		new Dygraph(
           		document.getElementById("chart"),
           		DygraphContent,
           		{
            		 fillGraph: 'true',
-           		 rollPeriod: 14,
+			 rollover : '14',
+			 connectSeparatedPoints: true,
            		 legend: 'always',
            		 labelsDivStyles: { 'textAlign': 'right' },
            		 showRangeSelector: true
@@ -46,41 +46,80 @@ ckan.module('ngsiviewchart',function(jQuery,_){
                                 var entity_id = '';
                                 var attribute_name = '';
                                 var attributes = [];
+				var h_list = ['Date'];
 				var v_list = [];
 				var d_list = [];
                                 for(i=0;i<data.contextResponses.length;i++){
                                     attributes = data.contextResponses[i].contextElement.attributes;
                                     for(e=0;e<attributes.length;e++){
 					var i_a = data.contextResponses[i].contextElement.id+"_"+attributes[e].name;
-					v_list[v_list.length] = ['Date', i_a]; 
-					d_list[d_list.length] = ['Date', i_a];
+					h_list[h_list.length] = i_a; 
                                         for(z=0;z<attributes[e].values.length;z++){
 					    var d = attributes[e].values[z].recvTime.substring(0,10).replace(/-/gi, "/");
 					    var h = attributes[e].values[z].recvTime.substring(11,19)
 				            var g_date = d+" "+h;
-					    var value  = parseFloat(attributes[e].values[z].attrValue);					    
-                                            v_list[v_list.length] = [g_date, value];
-					    d_list[d_list.length] = [attributes[e].values[z].recvTime, value];
+					    var value  = parseFloat(attributes[e].values[z].attrValue);
+					    temp_data = [g_date, value];
+					    temp_data_c = [attributes[e].values[z].recvTime, value];
+					    v_list[v_list.length] = [Date.parse(attributes[e].values[z].recvTime), i_a, temp_data];
+					    d_list[d_list.length] = [Date.parse(attributes[e].values[z].recvTime), i_a, temp_data_c];
 		                        }
-        	                            var csvContent = "";
-	                                    var DygraphContent = "";
-
-                                            for(var z=0;z<v_list.length;z++){
-                                                DygraphContent += v_list[z].join(", ")+"\n";
-                                                csvContent += d_list[z].join(", ")+"%0A";
-                                            }
-				            makeGraph(DygraphContent);
-                                     }
+                                    }
 				}
 
-			        var dbtn ="<a id='dbtn' class='btn btn-primary'><b>Download</b></a>";
+				function sortFunction(a, b) {
+    				    if (a[0] === b[0]) {
+        				return 0;
+    				    }
+    				    else {
+        				return (a[0] < b[0]) ? -1 : 1;
+    				    }
+				}
+
+				v_list = v_list.sort(sortFunction);
+				d_list = d_list.sort(sortFunction);
+
+                                var csvContent = h_list.join(", ")+"%0A";
+                                var DygraphContent =  h_list.join(", ")+"\n";
+
+                                for(var z=0;z<v_list.length;z++){
+				    var tempArray = new Array(h_list.length);
+				    var tempArray_c = new Array(h_list.length);
+
+				    tempArray[0] = v_list[z][2][0];
+				    tempArray_c[0] = d_list[z][2][0];
+
+  				    tempArray[h_list.indexOf(v_list[z][1])] = v_list[z][2][1];
+                                    tempArray_c[h_list.indexOf(d_list[z][1])] = d_list[z][2][1];
+
+				    var l = 0;						
+				    for(var r=0;r<h_list.length;r++){
+					var c = z + r;
+					if(c <= v_list.length - 1){
+				   	    if(v_list[z][0] == v_list[c][0]){
+						if (v_list[z][1] != v_list[c][1]){
+					    	    tempArray[h_list.indexOf(v_list[c][1])] = v_list[c][2][1];
+						    tempArray_c[h_list.indexOf(d_list[c][1])] = d_list[c][2][1];
+						    l = r;
+						}
+			   		    }
+					}
+			   	    }
+				    z += l;
+				    DygraphContent += tempArray.join(", ")+"\n";
+				    csvContent += tempArray_c.join(", ")+"%0A";
+                                }
+                                makeGraph(DygraphContent);
+
+
+			        var dbtn ="<div id='buttonbar'><a id='dbtn' class='btn btn-primary'><b>Download</b></a></div>";
                                 $("#chart").before(dbtn);
 				document.getElementById('dbtn').addEventListener('click', function () {
 
 					var a         = document.createElement('a');
 					a.href        = 'data:attachment/csv,' + csvContent;
 					a.target      = '_blank';
-					a.download    = i_a+'.csv';
+					a.download    = preload_resource['name']+'.csv';
 
 					document.body.appendChild(a);
 					a.click();
