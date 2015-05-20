@@ -6,11 +6,11 @@
   top: 2px;
   width: 16px;
   height: 16px;
-  background-image: url("/images/sprite-resource-icons.png");
+  background-image: url("/images/sprite-resource-icons2.png");
   background-repeat: no-repeat;
   background-position: 16px 16px;
   text-indent: -900em;
-  background: url("/images/sprite-resource-icons.png") no-repeat 0 0;
+  background: url("/images/sprite-resource-icons2.png") no-repeat 0 0;
 }
 .format-label {
   width: 32px;
@@ -87,8 +87,15 @@
 .format-label[data-format*=ngsi10] {
   width: 32px;
   height: 35px;
-  background-position: -385px -62px;
+  background-position: -384px -62px;
 }
+.format-label[data-format=ngsi-h],
+.format-label[data-format*=ngsi-h] {
+  width: 32px;
+  height: 35px;
+  background-position: -416px -62px;
+}
+
 
 .label[data-format="ngsi9"], 
 .label[data-format*="ngsi9"] {
@@ -98,7 +105,7 @@
 .label[data-format*="ngsi10"] {
     background-color: #65C3D1;
 }
-.label[data-format="ngsi-sth"],
-.label[data-format*="ngsi-sth"] {
+.label[data-format="ngsi-h"],
+.label[data-format*="ngsi-h"] {
     background-color: #FA8258;
 }
