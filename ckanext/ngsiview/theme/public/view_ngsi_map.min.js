@@ -101,12 +101,13 @@ ckan.module('ngsiviewmap',function(jQuery,_){
 				var dbtn ="<div id='buttonbar'><a id='dbtn' class='btn btn-primary'><b>Download</b></a></div>";
                                 $("#map").before(dbtn);
                                 document.getElementById('dbtn').addEventListener('click', function () {
-					var d_file = data.toSource();
-					d_file = d_file.replace("(", "").replace(")", "");
+					var d_file = JSON.stringify(data);
+					if(preload_resource['name'] == ''){var filename = 'Unnamed resource';}
+					else{var filename = preload_resource['name'];}
                                         var a         = document.createElement('a');
                                         a.href        = 'data:attachment/json,' + d_file;
                                         a.target      = '_blank';
-                                        a.download    = preload_resource['name']+'.json';
+                                        a.download    = filename+'.json';
 
                                         document.body.appendChild(a);
                                         a.click();

@@ -17,17 +17,17 @@ ckan.module('ngsiviewchart',function(jQuery,_){
                 resource_url = preload_resource['url']
             }
 
-	    function makeGraph(DygraphContent){
+	    function makeGraph(DygraphContent, range_s){
      		new Dygraph(
           		document.getElementById("chart"),
           		DygraphContent,
           		{
            		 fillGraph: 'true',
-			 rollover : '14',
-			 connectSeparatedPoints: true,
+			 connectSeparatedPoints: 'true',
+			 axisLabelFontSize: 10,
            		 legend: 'always',
            		 labelsDivStyles: { 'textAlign': 'right' },
-           		 showRangeSelector: true
+			 showRangeSelector: range_s,
           		}
       		);
 	    }
@@ -67,6 +67,11 @@ ckan.module('ngsiviewchart',function(jQuery,_){
                                     }
 				}
 
+				if(v_list.length == 0){
+                                    document.getElementById('chart').style.display = 'none';
+                                    document.getElementById('chart').style.border = '0px';
+				}
+
 				function sortFunction(a, b) {
     				    if (a[0] === b[0]) {
         				return 0;
@@ -78,7 +83,7 @@ ckan.module('ngsiviewchart',function(jQuery,_){
 
 				v_list = v_list.sort(sortFunction);
 				d_list = d_list.sort(sortFunction);
-
+				
                                 var csvContent = h_list.join(", ")+"%0A";
                                 var DygraphContent =  h_list.join(", ")+"\n";
 
@@ -109,18 +114,29 @@ ckan.module('ngsiviewchart',function(jQuery,_){
 				    DygraphContent += tempArray.join(", ")+"\n";
 				    csvContent += tempArray_c.join(", ")+"%0A";
                                 }
-                                makeGraph(DygraphContent);
+				var range_s = true;
+				if(h_list.length>=3){range_s = false;}
+                                makeGraph(DygraphContent, range_s);
 
 
 			        var dbtn ="<div id='buttonbar'><a id='dbtn' class='btn btn-primary'><b>Download</b></a></div>";
                                 $("#chart").before(dbtn);
 				document.getElementById('dbtn').addEventListener('click', function () {
 
-					var a         = document.createElement('a');
-					a.href        = 'data:attachment/csv,' + csvContent;
-					a.target      = '_blank';
-					a.download    = preload_resource['name']+'.csv';
+                                        if(preload_resource['name'] == ''){var filename = 'Unnamed resource';}
+					else{var filename = preload_resource['name'];}
+					var a = document.createElement('a');
+					if(v_list.length != 0){
+						a.href        = 'data:attachment/csv,' + csvContent;
+						a.target      = '_blank';
+						a.download    = filename+'.csv';
+					}
+					else{
+                                                a.href        = 'data:attachment/json,' + JSON.stringify(data);
+                                                a.target      = '_blank';
+                                                a.download    = filename+'.json';
 
+					}
 					document.body.appendChild(a);
 					a.click();
 				}, false);
