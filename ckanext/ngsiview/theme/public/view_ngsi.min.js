@@ -29,7 +29,7 @@ ckan.module('ngsiview',function(jQuery,_){
                         else{self.el.html(self.i18n('error',{text:textStatus,error:errorThrown}));}}});
                 }
                 else{
-                    self.el.html(view_enable[1]);
+                    self.el.html("\n\n\n"+view_enable[1]+"\n\n\n");
                 }
 
             }};});

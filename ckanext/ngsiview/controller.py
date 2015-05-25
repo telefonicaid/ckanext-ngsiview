@@ -36,57 +36,70 @@ def proxy_ngsi_resource(context, data_dict):
     log.info('Proxify resource {id}'.format(id=resource_id))
     resource = logic.get_action('resource_show')(context, {'id': resource_id})
 
-    if 'oauth_req' in resource and resource['oauth_req'] == 'true':
-        token = p.toolkit.c.usertoken['access_token']
-        headers = {'X-Auth-Token': token, 'Content-Type': 'application/json', 'Accept': 'application/json'}
-    else:
-        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-
-    if 'tenant' in resource:
-        headers['Fiware-Service'] = resource['tenant']
-    if 'service_path' in resource:
-        headers['Fiware-ServicePath'] = resource['service_path']
-
-    url = resource['url']
-    parts = urlparse.urlsplit(url)
-
-    if not parts.scheme or not parts.netloc:
-        base.abort(409, detail='Invalid URL.')
-
     try:
-        for i in range(2):
-            if url.lower().find('/querycontext') != -1:
-                if 'payload' in resource:
-                    if resource['payload'] == "":
-                        details = 'Please add a  payload to complete the query.'
-                        base.abort(409, detail=details)
+        if 'oauth_req' in resource and resource['oauth_req'] == 'true':
+            token = p.toolkit.c.usertoken['access_token']
+            headers = {'X-Auth-Token': token, 'Content-Type': 'application/json', 'Accept': 'application/json'}
+        else:
+            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 
-                    resource['payload'] = resource['payload'].replace("'", '"')
-                    resource['payload'] = resource['payload'].replace(" ", "")
-                else:
-                    details = 'Please add a  payload to complete the query.'
-                    base.abort(409, detail=details)
 
-                payload = json.dumps(json.loads(resource['payload']))
+	
+        if 'tenant' in resource:
+            headers['Fiware-Service'] = resource['tenant']
+        if 'service_path' in resource:
+            headers['Fiware-ServicePath'] = resource['service_path']
 
-                r = requests.post(url, headers=headers, data=payload, stream=True)
+
+        url = resource['url']
+        parts = urlparse.urlsplit(url)
+
+
+	if resource['format'] == 'ngsi-h':
+	    if 'tenant' not in resource or len(resource['tenant']) == 0:
+                details = 'Please complete the tenant field.'
+                base.abort(409, detail=details)
+            if 'service_path' not in resource or len(resource['service_path']) == 0:
+                details = 'Please complete the service path field.'
+                base.abort(409, detail=details)
+
+	    lastN = url.lower().find('lastn')
+            hLimit = url.lower().find('hlimit')
+            hOffset = url.lower().find('hoffset')
+
+	    if lastN == -1 and (hLimit == -1 or hOffset == -1):
+                details = 'if no lastN is provided hLimit and hOffset are mandatory parameters.'
+                base.abort(409, detail=details)
+
+
+        if not parts.scheme or not parts.netloc:
+            base.abort(409, detail='Invalid URL.')
+
+        if url.lower().find('/querycontext') != -1:
+            if 'payload' in resource:
+                resource['payload'] = resource['payload'].replace("'", '"')
+                resource['payload'] = resource['payload'].replace(" ", "")
             else:
-                r = requests.get(url, headers=headers, stream=True)
+                details = 'Please add a  payload to complete the query.'
+                base.abort(409, detail=details)
 
-            if r.status_code == 401 and 'oauth_req' in resource and resource['oauth_req'] == 'true':
-                details = 'ERROR 401 token expired. Retrieving new token and retrying...'
-                log.info(details)
-                p.toolkit.c.usertoken_refresh()
-            else:
-                break
+            payload = json.dumps(json.loads(resource['payload']))
+            r = requests.post(url, headers=headers, data=payload, stream=True)
+
+        else:
+            r = requests.get(url, headers=headers, stream=True)
 
         if r.status_code == 401:
-            if 'oauth_req' not in resource or resource['oauth_req'] == 'false':
+	    if 'oauth_req' in resource and resource['oauth_req'] == 'true':
+                details = 'ERROR 401 token expired. Retrieving new token, reload please.'
+                log.info(details)
+                base.abort(409, detail=details)
+                p.toolkit.c.usertoken_refresh()
+
+            elif 'oauth_req' not in resource or resource['oauth_req'] == 'false':
                 details = 'This query may need Oauth-token, please check if the token field on resource_edit is correct.'
                 log.info(details)
                 base.abort(409, detail=details)
-            else:
-                base.abort(409, detail='Cannot retrieve a new token.')
 
         else:
             r.raise_for_status()
@@ -103,7 +116,7 @@ def proxy_ngsi_resource(context, data_dict):
                 base.abort(409, headers={'content-encoding': ''}, detail=details)
 
     except ValueError:
-        details = 'There is a problem with the payload, please check if the query is properly parsed.'
+        details = ''
         base.abort(409, detail=details)
     except requests.HTTPError:
         details = 'Could not proxy ngsi_resource. We are working to resolve this issue as quickly as possible'
@@ -121,3 +134,4 @@ class ProxyNGSIController(base.BaseController):
         data_dict = {'resource_id': resource_id}
         context = {'model': base.model, 'session': base.model.Session, 'user': base.c.user or base.c.author}
         return proxy_ngsi_resource(context, data_dict)
+

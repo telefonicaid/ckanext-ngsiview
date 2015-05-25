@@ -5,21 +5,7 @@
       <li>{% link_for _('Manage'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
     {% endif %}
     {% if res.url and h.is_url(res.url) %}
-      {% if res.url.lower().find('/querycontext')!= -1 or res.url.lower().find('/contextentities/')!= -1 %}
-      <li>
-        <a class="btn btn-primary disabled">
-          {% if res.resource_type in ('listing', 'service') %}
-            <i class="icon-eye-open"></i> {{ _('View') }}
-          {% elif  res.resource_type == 'api' %}
-            <i class="icon-key"></i> {{ _('API Endpoint') }}
-          {% elif not res.has_views or not res.can_be_previewed %}
-            <i class="icon-external-link"></i> {{ _('Go to resource') }}
-          {% else %}
-            <i class="icon-download"></i> {{ _('Download') }}
-          {% endif %}
-        </a>
-      </li>
-      {% else %}
+      {% if res.url.lower().find('/querycontext') == -1 and res.url.lower().find('/contextentities/') == -1 %}
       <li>
         <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}">
           {% if res.resource_type in ('listing', 'service') %}
