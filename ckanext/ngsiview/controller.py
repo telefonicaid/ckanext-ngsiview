@@ -38,24 +38,7 @@ def proxy_ngsi_resource(context, data_dict):
 
     try:
         if 'oauth_req' in resource and resource['oauth_req'] == 'true':
-            data = {
-                "auth": {
-                    "identity": {
-                        "methods": [
-                            "oauth2"
-                        ],
-                        "oauth2": {
-                            "access_token_id": p.toolkit.c.usertoken['access_token']
-                        }
-                    }
-                }
-            }
-            payload = json.dumps(data)
-            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-            response = requests.post("http://cloud.lab.fiware.org:4730/v3/auth/tokens", headers=headers, data=payload)
-            response.raise_for_status()
-            token = response.headers['x-subject-token']
-
+            token = p.toolkit.c.usertoken['access_token']
             headers = {'X-Auth-Token': token, 'Content-Type': 'application/json', 'Accept': 'application/json'}
         else:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
