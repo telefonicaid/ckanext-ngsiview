@@ -45,7 +45,7 @@ class NgsiView(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
 
-    if p.toolkit.ckan.__version__ == '2.3':
+    if p.toolkit.check_ckan_version(min_version='2.3'):
         p.implements(p.IResourceView, inherit=True)
     else:
         p.implements(p.IResourcePreview, inherit=True)
@@ -69,7 +69,7 @@ class NgsiView(p.SingletonPlugin):
         p.toolkit.add_resource('theme/public', 'ckanext-ngsiview')
         p.toolkit.add_public_directory(config, 'theme/public')
 
-        if p.toolkit.ckan.__version__ == '2.3':
+    	if p.toolkit.check_ckan_version(min_version='2.3'):
             p.toolkit.add_template_directory(config, 'theme/templates')
         else:
             p.toolkit.add_template_directory(config, 'theme/templates/old_templates')
@@ -140,7 +140,7 @@ class NgsiView(p.SingletonPlugin):
             return {'can_preview': False}
 
     def setup_template_variables(self, context, data_dict):
-        if p.toolkit.ckan.__version__ == '2.3':
+    	if p.toolkit.check_ckan_version(min_version='2.3'):
             metadata = {'ngsi_formats': self.NGSI_FORMATS}
             resource = data_dict['resource']
             proxy_enabled = p.plugin_loaded('resource_proxy')
