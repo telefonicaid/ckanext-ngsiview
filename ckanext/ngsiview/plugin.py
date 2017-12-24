@@ -152,7 +152,7 @@ class NgsiView(p.SingletonPlugin):
             else:
                 oauth_req = resource['oauth_req']
 
-            if proxy_enabled and not same_domain:
+            if proxy_enabled:
                 if check_query(resource):
                     if oauth_req == 'true' and not p.toolkit.c.user:
                         details = "</br></br>In order to see this resource properly, you need to be logged in.</br></br></br>"
