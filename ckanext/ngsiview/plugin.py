@@ -153,28 +153,24 @@ class NgsiView(p.SingletonPlugin):
                 oauth_req = resource['oauth_req']
 
             if proxy_enabled or same_domain:
-                url = data_dict['resource']['url']
                 if check_query(resource):
                     if oauth_req == 'true' and not p.toolkit.c.user:
                         details = "</br></br>In order to see this resource properly, you need to be logged in.</br></br></br>"
                         f_details = "In order to see this resource properly, you need to be logged in."
                         h.flash_error(f_details, allow_html=False)
                         view_enable = [False, details]
-                        if proxy_enabled and not same_domain:
-                            url = proxy.get_proxified_resource_url(data_dict)
+                        url = proxy.get_proxified_resource_url(data_dict)
 
                     elif oauth_req == 'true' and not oauth2_enabled:
                         details = "</br></br>In order to see this resource properly, enable oauth2 extension</br></br></br>"
                         f_details = "In order to see this resource properly, enable oauth2 extension."
                         h.flash_error(f_details, allow_html=False)
                         view_enable = [False, details]
-                        if proxy_enabled and not same_domain:
-                            url = proxy.get_proxified_resource_url(data_dict)
+                        url = proxy.get_proxified_resource_url(data_dict)
 
                     else:
-                        if proxy_enabled and not same_domain:
-                            url = self.get_proxified_ngsi_url(data_dict)
-                            data_dict['resource']['url'] = url
+                        url = self.get_proxified_ngsi_url(data_dict)
+                        data_dict['resource']['url'] = url
                         view_enable = [True, 'OK']
 
                 else:
@@ -182,8 +178,7 @@ class NgsiView(p.SingletonPlugin):
                     f_details = "This is not a ContextBroker query, please check Orion Context Broker documentation."
                     h.flash_error(f_details, allow_html=False)
                     view_enable = [False, details]
-                    if proxy_enabled and not same_domain:
-                        url = proxy.get_proxified_resource_url(data_dict)
+                    url = proxy.get_proxified_resource_url(data_dict)
             else:
                 details = "</br></br>Enable resource_proxy</br></br></br>"
                 f_details = "Enable resource_proxy."
@@ -196,7 +191,7 @@ class NgsiView(p.SingletonPlugin):
                     'resource_url': json.dumps(url),
                     'view_enable': json.dumps(view_enable)}
         else:
-            if self.proxy_is_enabled and not data_dict['resource']['on_same_domain']:
+            if self.proxy_is_enabled or data_dict['resource']['on_same_domain']:
                 if check_query(data_dict['resource']):
                     url = self.get_proxified_ngsi_url(data_dict)
                     p.toolkit.c.resource['url'] = url
